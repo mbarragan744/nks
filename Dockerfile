@@ -19,11 +19,13 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Contenedor final: solo archivos estáticos generados por Vite
-COPY --from=build /app/dist ./dist
-COPY package.json .
+# CRA genera "build", no "dist"
+COPY --from=build /app/build ./build
+
+# Para servir los estáticos necesitas "serve"
+RUN npm install -g serve
 
 EXPOSE 3000
 
-# Si usas el preview de Vite (vite preview):
-CMD ["npm", "run", "preview"]
+# Servir la app
+CMD ["serve", "-s", "build"]
